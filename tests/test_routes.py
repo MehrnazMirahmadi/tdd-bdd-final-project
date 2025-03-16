@@ -28,11 +28,11 @@ import os
 import logging
 from decimal import Decimal
 from unittest import TestCase
+from urllib.parse import quote_plus
 from service import app
 from service.common import status
 from service.models import db, init_db, Product
 from tests.factories import ProductFactory
-from urllib.parse import quote_plus 
 
 # Disable all but critical errors during normal test run
 # uncomment for debugging failing tests
@@ -174,7 +174,7 @@ class TestProductRoutes(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(data["name"], test_product.name)
-   
+
     ######################################################################
     # Utility functions
     ######################################################################
@@ -185,12 +185,14 @@ class TestProductRoutes(TestCase):
         data = response.get_json()
         # logging.debug("data = %s", data)
         return len(data)
+
     def test_get_product_not_found(self):
         """It should not Get a Product thats not found"""
         response = self.client.get(f"{BASE_URL}/0")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         data = response.get_json()
         self.assertIn("was not found", data["message"])
+
     def test_update_product(self):
         """It should Update an existing Product"""
         # create a product to update
@@ -205,7 +207,7 @@ class TestProductRoutes(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_product = response.get_json()
         self.assertEqual(updated_product["description"], "unknown")
-    
+
     def test_get_product_list(self):
         """It should Get a list of Products"""
         self._create_products(5)
@@ -228,7 +230,7 @@ class TestProductRoutes(TestCase):
         # check the data just to be sure
         for product in data:
             self.assertEqual(product["name"], test_name)
-    
+
     def test_delete_product(self):
         """It should Delete a Product"""
         products = self._create_products(5)
@@ -242,7 +244,7 @@ class TestProductRoutes(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         new_count = self.get_product_count()
         self.assertEqual(new_count, product_count - 1)
-    
+
     def test_query_by_category(self):
         """It should Query Products by category"""
         products = self._create_products(10)
@@ -259,13 +261,12 @@ class TestProductRoutes(TestCase):
         # check the data just to be sure
         for product in data:
             self.assertEqual(product["category"], category.name)
-    
+
     def test_query_by_availability(self):
         """It should Query Products by availability"""
         products = self._create_products(10)
         available_products = [product for product in products if product.available is True]
-        available_count = len(available_products)        
-        # test for available
+        available_count = len(available_products)
         response = self.client.get(
             BASE_URL, query_string="available=true"
         )

@@ -104,7 +104,7 @@ class TestProductModel(unittest.TestCase):
     #
     # ADD YOUR TEST CASES HERE
     #
-   def test_read_a_product(self):
+    def test_read_a_product(self):
         """It should Read a Product"""
         product = ProductFactory()
         product.id = None
@@ -129,13 +129,11 @@ class TestProductModel(unittest.TestCase):
         product.update()
         self.assertEqual(product.id, original_id)
         self.assertEqual(product.description, "testing")
-        # Fetch it back and make sure the id hasn't changed
-        # but the data did change
         products = Product.all()
         self.assertEqual(len(products), 1)
         self.assertEqual(products[0].id, original_id)
         self.assertEqual(products[0].description, "testing")
-    
+
     def test_delete_a_product(self):
         """It should Delete a Product"""
         product = ProductFactory()
@@ -156,6 +154,7 @@ class TestProductModel(unittest.TestCase):
         # See if we get back 5 products
         products = Product.all()
         self.assertEqual(len(products), 5)
+
     def test_find_by_name(self):
         """It should Find a Product by Name"""
         products = ProductFactory.create_batch(5)
@@ -167,6 +166,7 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found.count(), count)
         for product in found:
             self.assertEqual(product.name, name)
+
     def test_find_by_availability(self):
         """It should Find Products by Availability"""
         products = ProductFactory.create_batch(10)
@@ -178,6 +178,7 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found.count(), count)
         for product in found:
             self.assertEqual(product.available, available)
+
     def test_find_by_category(self):
         """It should Find Products by Category"""
         products = ProductFactory.create_batch(10)
